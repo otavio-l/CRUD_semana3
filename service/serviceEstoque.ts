@@ -15,7 +15,7 @@ function readNewRow(): NewRow {
         nome: user_input('Digite o nome: '),
         peso: user_input('Digite o peso: '),
         valor: user_input('Digite o valor: '),
-        quantidade: user_input('Digite a quantidade: ')
+        quant: user_input('Digite a quantidade: ')
     }
     return new_row
 }
