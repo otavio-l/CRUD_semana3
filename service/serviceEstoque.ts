@@ -1,5 +1,7 @@
 const user_input = require('prompt-sync')({sigint: true})
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import fs from 'fs';
+import csv from 'csv-parser';
 
 
 interface NewRow {
@@ -32,4 +34,15 @@ async function writeNewRow(file_path: string, new_row: NewRow[]): Promise<void> 
     })
 
     return csv_writer.writeRecords(new_row)
+}
+
+async function readCSV(file_path: string): Promise<NewRow[]> {
+    return new Promise((resolve, reject) => {
+    const results: NewRow[] = [];
+    fs.createReadStream(file_path)
+      .pipe(csv())
+      .on('data', (new_row: NewRow) => results.push(new_row))
+      .on('end', () => resolve(results))
+      .on('error', (error) => reject(error));
+  });
 }
