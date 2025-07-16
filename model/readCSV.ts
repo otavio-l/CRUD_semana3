@@ -3,7 +3,7 @@ import csv from 'csv-parser';
 import { NewRow } from './interfaceData';
 
 
-async function readCSV(file_path: string): Promise<NewRow[]> {
+export async function readCSV(file_path: string): Promise<NewRow[]> {
     return new Promise((resolve, reject) => {
     const results: NewRow[] = [];
     fs.createReadStream(file_path)

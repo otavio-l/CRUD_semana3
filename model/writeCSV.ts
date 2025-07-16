@@ -4,8 +4,7 @@ const user_input = require('prompt-sync')({sigint: true})
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 
 
-
-function readNewRow(): NewRow {
+export function readNewRow(): NewRow {
     const new_row = {
         nome: user_input('Digite o nome: '),
         peso: user_input('Digite o peso: '),
@@ -15,7 +14,7 @@ function readNewRow(): NewRow {
     return new_row
 }
 
-async function writeNewRow(file_path: string, new_row: NewRow[]): Promise<void> {
+export async function writeCSV(file_path: string, new_row: NewRow[]): Promise<void> {
     const csv_writer = createCsvWriter({
         path: file_path,
         header: [
