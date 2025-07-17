@@ -1,6 +1,7 @@
 import { verifyRow } from "../service/serviceEstoque";
 import { removeRow, writeCSV } from "../model/writeCSV";
 import { readCSV } from "../model/readCSV";
+import { NewRow } from "../model/interfaceData";
 
 
 async function addProduct(productFields: string[]): Promise<void> {
@@ -42,4 +43,11 @@ async function listProducts(): Promise<void> {
     for (let row in rows) {
         console.log(JSON.stringify(row, null, 2));
     }
+}
+
+async function prizeTotalProducts(): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+        return previousSum + (currentValue.valor * currentValue.quant)
+    }, 0)
 }
