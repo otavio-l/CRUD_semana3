@@ -52,3 +52,11 @@ async function prizeTotalProducts(): Promise<void> {
     }, 0)
     console.log(`Valor total estocado: ${sum}`)
 }
+
+async function kgTotalProducts(): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+        return previousSum + (currentValue.peso * currentValue.quant)
+    }, 0)
+    console.log(`Peso total estocado: ${sum}`)
+}
