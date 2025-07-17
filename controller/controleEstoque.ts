@@ -3,9 +3,8 @@ import { readNewRow } from "../view/prompt";
 import { writeCSV } from "../model/writeCSV";
 
 
-async function addProduct(): Promise<void> {
+async function addProduct(productFields: string[]): Promise<void> {
     try {
-        const productFields = readNewRow()
         const row = await verifyRow(productFields)
         await writeCSV('db/estoque.csv', [row])
         console.log("Produto adicionado com sucesso")
