@@ -50,4 +50,5 @@ async function prizeTotalProducts(): Promise<void> {
     const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
         return previousSum + (currentValue.valor * currentValue.quant)
     }, 0)
+    console.log(`Valor total estocado: ${sum}`)
 }
