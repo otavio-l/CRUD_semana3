@@ -1,5 +1,5 @@
 import { verifyRow } from "../service/serviceEstoque";
-import { writeCSV } from "../model/writeCSV";
+import { removeRow, writeCSV } from "../model/writeCSV";
 import { readCSV } from "../model/readCSV";
 
 
@@ -28,6 +28,11 @@ async function removeProduct(nameExclude: string): Promise<void> {
     }
 
     console.log("Você está prestes a excluir essa linha:")
-    console.log(Object.values(rows).join(' , '))        
+    console.log(Object.values(rows).join(' , '))
+    const remove = userInput("Tem certeza?[S/N]: ")
+    if (remove.trim() !== 'S'){
+        return
+    }
 
+    removeRow('db/estoque.csv', nameExclude)
 }
