@@ -69,3 +69,8 @@ async function prizeMedian(): Promise<void> {
     }, 0)
     console.log(`Valor médio dos produtos: ${sumPrize/sumQuant}`)
 }
+
+async function quantItems(): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    console.log(`Quantidade de produtos diferentes: ${rows.length}`)
+}
