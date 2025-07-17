@@ -36,3 +36,10 @@ async function removeProduct(nameExclude: string): Promise<void> {
 
     removeRow('db/estoque.csv', nameExclude)
 }
+
+async function listProducts(): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    for (let row in rows) {
+        console.log(JSON.stringify(row, null, 2));
+    }
+}
