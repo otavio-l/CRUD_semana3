@@ -8,7 +8,15 @@ export async function readCSV(file_path: string): Promise<NewRow[]> {
     const results: NewRow[] = [];
     fs.createReadStream(file_path)
       .pipe(csv())
-      .on('data', (new_row: NewRow) => results.push(new_row))
+      .on('data', (rawRow) => {
+        const row: NewRow = {
+          nome: rawRow['Nome'],
+          peso: Number(rawRow['Peso']),
+          valor: Number(rawRow['Valor']),
+          quant: Number(rawRow['Quantidade']),
+        }
+        results.push(row)
+      })
       .on('end', () => resolve(results))
       .on('error', (error) => reject(error));
   });
