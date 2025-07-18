@@ -1,17 +1,15 @@
 import { readCSV } from '../model/readCSV'
-import { writeCSV } from '../model/writeCSV'
 import { NewRow } from '../model/interfaceData'
 
 
 const dbPath = '../db/estoque.csv'
 
 
-export async function verifyRow(userRow: [string, number, number, number]): Promise<NewRow> {
-    for (let i=1; i<4; i++){
-        userRow[i] = Number(userRow[i])
-    }
+export async function verifyRow(userRow: string[]): Promise<NewRow> {
+    const [nome, peso, valor, quant] = userRow
+    
     if (typeof userRow[0] !== 'string' || isNaN(Number(userRow[1])) || isNaN(Number(userRow[2])) || 
-    isNaN(userRow[3])) {
+    isNaN(Number(userRow[3]))) {
         throw new Error('Dados inválidos para o produto')
     }
     
@@ -23,10 +21,10 @@ export async function verifyRow(userRow: [string, number, number, number]): Prom
     }
 
     const row: NewRow = {
-        nome: userRow[0],
-        peso: userRow[1],
-        valor: userRow[2],
-        quant: userRow[3]
+        nome: nome,
+        peso: Number(peso),
+        valor: Number(valor),
+        quant: Number(quant)
     }
     return row
 }
