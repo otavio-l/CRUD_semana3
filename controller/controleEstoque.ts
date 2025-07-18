@@ -58,16 +58,27 @@ async function kgTotalProducts(): Promise<void> {
     const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
         return previousSum + (currentValue.peso * currentValue.quant)
     }, 0)
-    console.log(`Peso total estocado: ${sum}`)
+    console.log(`Peso total estocado: ${sum}Kg`)
 }
 
 async function prizeMedian(): Promise<void> {
     const rows = await readCSV('db/estoque.csv')
     let sumQuant = 0
     const sumPrize = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+        sumQuant += currentValue.quant
         return previousSum + (currentValue.valor * currentValue.quant)
     }, 0)
-    console.log(`Valor médio dos produtos: ${sumPrize/sumQuant}`)
+    console.log(`Valor médio dos produtos: ${sumPrize / sumQuant}`)
+}
+
+async function kgMedian(): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    let sumQuant = 0
+    const sumKg = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+        sumQuant += currentValue.quant
+        return previousSum + (currentValue.peso * currentValue.quant)
+    }, 0)
+    console.log(`Peso médio dos produtos: ${sumKg / sumQuant}kg`)
 }
 
 async function quantItems(): Promise<void> {
