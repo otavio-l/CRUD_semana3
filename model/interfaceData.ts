@@ -5,4 +5,4 @@ export interface NewRow {
     quant: number
 }
 
-
+export const dbPath = 'db/estoque.csv'
