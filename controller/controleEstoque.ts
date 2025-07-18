@@ -45,6 +45,19 @@ async function listProducts(): Promise<void> {
     }
 }
 
+async function computeProducts(callback: Function, median: boolean, msg: string): Promise<void> {
+    const rows = await readCSV('db/estoque.csv')
+    let sumQuant = 0
+    const sum = rows.reduce((acc, row) => {
+        const value = callback(row)
+        sumQuant += row.quant
+        return acc + value
+    }, 0)
+    const endResult = (median) ? sum / sumQuant : sum
+    console.log(`${msg}: ${endResult}`)
+
+}
+
 async function prizeTotalProducts(): Promise<void> {
     const rows = await readCSV('db/estoque.csv')
     const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
