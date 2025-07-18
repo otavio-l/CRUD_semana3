@@ -5,7 +5,7 @@ import { NewRow, dbPath } from './interfaceData';
 import { ensureFileExists } from './writeCSV';
 
 export async function readCSV(): Promise<NewRow[]> {
-    ensureFileExists(dbPath);
+    await ensureFileExists(dbPath);
     return new Promise((resolve, reject) => {
         const results: NewRow[] = [];
         fs.createReadStream(dbPath)

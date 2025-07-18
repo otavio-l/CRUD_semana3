@@ -3,18 +3,26 @@ import { dbPath } from './interfaceData';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
+
 export async function ensureFileExists(filePath: string): Promise<void> {
-    const absolutePath = path.resolve(filePath);
+    // const absolutePath = path.resolve(filePath);
     try {
-        await fs.access(absolutePath);
+        await fs.access(filePath);
         return;
     } catch {
-        throw new Error(`Arquivo não existe: ${absolutePath}`);
+        console.error("Arquivo csv não existe, criando ...")
+        try {
+            await fs.mkdir('db', { recursive: true });
+            const headers = 'Nome,Peso,Valor,Quantidade\n';
+            await fs.writeFile(filePath, headers, 'utf-8');
+        } catch (err) {
+            throw new Error(`Erro ao criar csv: ${err}`)
+        }
     }
 }
 
 export async function writeCSV(userRow: string[]): Promise<void> {
-    ensureFileExists(dbPath);
+    await ensureFileExists(dbPath);
     const formattedRow = userRow.join(',') + '\n';
 
     try {
@@ -27,7 +35,7 @@ export async function writeCSV(userRow: string[]): Promise<void> {
 
 export async function removeRow(lineIndex: number): Promise<void> {
     try {
-        ensureFileExists(dbPath);
+        await ensureFileExists(dbPath);
 
         const content = await fs.readFile(dbPath, 'utf-8');
         const lines = content.split('\n');
