@@ -2,9 +2,10 @@ import { verifyRow } from "../service/serviceEstoque";
 import { removeRow, writeCSV } from "../model/writeCSV";
 import { readCSV } from "../model/readCSV";
 import { NewRow } from "../model/interfaceData";
+import { removeCertainty } from "../view/prompt"
 
 
-async function addProduct(productFields: string[]): Promise<void> {
+export async function addProduct(productFields: string[]): Promise<void> {
     try {
         const row = await verifyRow(productFields)
         await writeCSV('db/estoque.csv', [row])
@@ -14,7 +15,7 @@ async function addProduct(productFields: string[]): Promise<void> {
     }
 }
 
-async function removeProduct(nameExclude: string): Promise<void> {
+export async function removeProduct(nameExclude: string): Promise<void> {
     const rows = await readCSV('db/estoque.csv')
     let index
     for (let i=0; i<rows.length; i++) {
@@ -28,81 +29,79 @@ async function removeProduct(nameExclude: string): Promise<void> {
         return
     }
 
-    console.log("Você está prestes a excluir essa linha:")
-    console.log(Object.values(rows).join(' , '))
-    const remove = userInput("Tem certeza?[S/N]: ")
-    if (remove.trim() !== 'S'){
+    if (removeCertainty(rows[index]) !== 'S'){
         return
     }
 
     removeRow('db/estoque.csv', nameExclude)
 }
 
-async function listProducts(): Promise<void> {
+export async function listProducts(): Promise<void> {
     const rows = await readCSV('db/estoque.csv')
-    for (let row in rows) {
+    for (let row of rows) {
         console.log(JSON.stringify(row, null, 2));
     }
 }
 
-async function computeProducts(callback: Function, median: boolean, msg: string): Promise<void> {
+export async function computeProducts(main: 'peso'|'valor'|'quant', msg: string, quant = true, median = false)
+: Promise<void> {
     const rows = await readCSV('db/estoque.csv')
     let sumQuant = 0
-    const sum = rows.reduce((acc, row) => {
-        const value = callback(row)
+    const sum = rows.reduce((acc: number, row: NewRow) => {
+        const value = (quant) ? row[main] * row["quant"] : row[main]
         sumQuant += row.quant
         return acc + value
     }, 0)
-    const endResult = (median) ? sum / sumQuant : sum
+    const endResult = (median) ? (sum / sumQuant).toFixed(2) : sum
     console.log(`${msg}: ${endResult}`)
 
 }
 
-async function prizeTotalProducts(): Promise<void> {
-    const rows = await readCSV('db/estoque.csv')
-    const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
-        return previousSum + (currentValue.valor * currentValue.quant)
-    }, 0)
-    console.log(`Valor total estocado: ${sum}`)
-}
+// export async function priceTotalProducts(): Promise<void> {
+//     const rows = await readCSV('db/estoque.csv')
+//     const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+//         return previousSum + (currentValue.valor * currentValue.quant)
+//     }, 0)
+//     console.log(`Valor total estocado: ${sum}`)
+// }
 
-async function kgTotalProducts(): Promise<void> {
-    const rows = await readCSV('db/estoque.csv')
-    const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
-        return previousSum + (currentValue.peso * currentValue.quant)
-    }, 0)
-    console.log(`Peso total estocado: ${sum}Kg`)
-}
+// export async function kgTotalProducts(): Promise<void> {
+//     const rows = await readCSV('db/estoque.csv')
+//     const sum = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+//         return previousSum + (currentValue.peso * currentValue.quant)
+//     }, 0)
+//     console.log(`Peso total estocado(kg): ${sum}`)
+// }
 
-async function prizeMedian(): Promise<void> {
-    const rows = await readCSV('db/estoque.csv')
-    let sumQuant = 0
-    const sumPrize = rows.reduce((previousSum: number, currentValue: NewRow): number => {
-        sumQuant += currentValue.quant
-        return previousSum + (currentValue.valor * currentValue.quant)
-    }, 0)
-    console.log(`Valor médio dos produtos: ${sumPrize / sumQuant}`)
-}
+// export async function priceMedian(): Promise<void> {
+//     const rows = await readCSV('db/estoque.csv')
+//     let sumQuant = 0
+//     const sumPrize = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+//         sumQuant += currentValue.quant
+//         return previousSum + (currentValue.valor * currentValue.quant)
+//     }, 0)
+//     console.log(`Valor médio dos produtos: ${(sumPrize / sumQuant).toFixed(2)}`)
+// }
 
-async function kgMedian(): Promise<void> {
-    const rows = await readCSV('db/estoque.csv')
-    let sumQuant = 0
-    const sumKg = rows.reduce((previousSum: number, currentValue: NewRow): number => {
-        sumQuant += currentValue.quant
-        return previousSum + (currentValue.peso * currentValue.quant)
-    }, 0)
-    console.log(`Peso médio dos produtos: ${sumKg / sumQuant}kg`)
-}
+// export async function kgMedian(): Promise<void> {
+//     const rows = await readCSV('db/estoque.csv')
+//     let sumQuant = 0
+//     const sumKg = rows.reduce((previousSum: number, currentValue: NewRow): number => {
+//         sumQuant += currentValue.quant
+//         return previousSum + (currentValue.peso * currentValue.quant)
+//     }, 0)
+//     console.log(`Peso médio dos produtos(kg): ${(sumKg / sumQuant).toFixed(2)}`)
+// }
 
-async function quantTotal(): Promise<void> {
-    const rows = await readCSV('db/estoque.csv')
-    const sumQuant = rows.reduce((previousSum: number, currentValue: NewRow): number =>{
-        return previousSum + currentValue.quant
-    }, 0)
-    console.log(`Quantidade total de produtos: ${sumQuant}`)
-}
+// export async function quantTotal(): Promise<void> {
+//     const rows = await readCSV('db/estoque.csv')
+//     const sumQuant = rows.reduce((previousSum: number, currentValue: NewRow): number =>{
+//         return previousSum + currentValue.quant
+//     }, 0)
+//     console.log(`Quantidade total de produtos: ${sumQuant}`)
+// }
 
-async function quantItems(): Promise<void> {
+export async function quantItems(): Promise<void> {
     const rows = await readCSV('db/estoque.csv')
     console.log(`Quantidade de produtos diferentes: ${rows.length}`)
 }
