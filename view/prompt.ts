@@ -7,8 +7,7 @@ const userInput = require('prompt-sync')({sigint: true})
 function readNewRow(): string[] {
     const userRow: string[] = []
     userRow.push(userInput('Digite o nome: '))
-    userRow.push(userInput('Digite o nome: '))
-    userRow.push(userInput('Digite o peso: '))
+    userRow.push(userInput('Digite o peso(kg): '))
     userRow.push(userInput('Digite o valor: '))
     userRow.push(userInput('Digite a quantidade: '))
     return userRow
