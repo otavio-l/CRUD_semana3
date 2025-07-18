@@ -38,6 +38,10 @@ export async function removeProduct(nameExclude: string): Promise<void> {
 
 export async function listProducts(): Promise<void> {
     const rows = await readCSV()
+    if (rows.length == 0) {
+        console.log("Nenhum produto estocado")
+        return
+    }
     for (let row of rows) {
         console.log(JSON.stringify(row, null, 2));
     }
