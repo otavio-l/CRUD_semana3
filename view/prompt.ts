@@ -14,10 +14,10 @@ function readNewRow(): string[] {
     return userRow
 }
 
-export function removeCertainty(row: NewRow): void {
+export function removeCertainty(row: NewRow): string {
     console.log("Você está prestes a excluir essa linha:")
     console.log(Object.values(row).join(' , '))
-    const remove = userInput("Tem certeza?[S/N]: ")
+    return userInput("Tem certeza?[S/N]: ").trim()
 }
 
 export function menu(): void {
