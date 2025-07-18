@@ -1,3 +1,5 @@
 node_modules/
 db/estoque.csv
 test.ts
+.prettierrc
+.prettierignore

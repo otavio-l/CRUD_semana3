@@ -1,4 +1,3 @@
-import { menu } from "./view/prompt";
+import { menu } from './view/prompt';
 
-
-menu()
+menu();
