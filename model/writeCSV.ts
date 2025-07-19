@@ -1,11 +1,9 @@
 import { dbPath } from './interfaceData';
 
 import * as fs from 'fs/promises';
-import * as path from 'path';
 
 
 export async function ensureFileExists(filePath: string): Promise<void> {
-    // const absolutePath = path.resolve(filePath);
     try {
         await fs.access(filePath);
         return;
