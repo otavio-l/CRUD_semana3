@@ -4,7 +4,7 @@ import { controller } from '../controller/controleEstoque'
 const userInput = require('prompt-sync')({ sigint: true });
 
 
-function readNewRow(): string[] {
+export function readNewRow(): string[] {
     const userRow: string[] = [];
     userRow.push(userInput('Digite o nome: '));
     userRow.push(userInput('Digite o peso(kg): '));
@@ -17,6 +17,10 @@ export function removeCertainty(row: NewRow): string {
     console.log('Você está prestes a excluir essa linha:');
     console.log(Object.values(row).join(' , '));
     return userInput('Tem certeza?[S/N]: ').trim();
+}
+
+export function readNameExclude(): string {
+    return userInput('Digite o nome do produto para excluir: ');
 }
 
 export async function menu(): Promise<void> {
@@ -35,7 +39,7 @@ export async function menu(): Promise<void> {
         );
         const action = userInput('Digite a ação desejada: ');
 
-        await controller();
+        await controller(action);
 
         console.log('-'.repeat(120));
     }
